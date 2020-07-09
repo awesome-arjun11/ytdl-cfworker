@@ -4,20 +4,31 @@ import { theResponse, badRequestResponse, serverErrorResponse } from './http-res
 
 const getytinfo = async (infofn, id) => {
     if (!validateID(id))
-        return badRequestResponse("Invalid ID");
+        return badRequestResponse(`Invalid ID : ${id}`);
 
-    try{
-    const info = await infofn(id);
-    console.log(info);
-    return theResponse(
-        200,
-        'OK',
-        {},
-        JSON.stringify(info)
-    );
-    }catch(err){
-        console.log(err.stack);
-        return serverErrorResponse(err);
+    try {
+
+        const info = await infofn(id);
+        return theResponse(
+            200,
+            'OK',
+            {},
+            JSON.stringify(info)
+        );
+
+    } catch(err) {
+
+        if (err.name === 'YTDLError'){
+            return theResponse(
+                200,
+                'OK',
+                {},
+                JSON.stringify({error: err.message})
+            );
+        }
+        else {
+            return serverErrorResponse(err);
+        } 
     };
 }
 
@@ -30,16 +41,4 @@ export const handlerFullInfo = async (request, { id }) => {
 }
 
 
-export const handlerPatchedInfo = async (request, params) => {
-    if (!validateID(params.id))
-        return badRequestResponse("Invalid ID");
-    getBasicInfo(params.id).then(info => {
-        return theResponse(
-            200,
-            'OK',
-            {},
-            JSON.stringify(info)
-        )
-    });
-}
 

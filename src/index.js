@@ -1,5 +1,6 @@
 
-import {router} from './ytdl-routes';
+import { router } from './ytdl-routes';
+import { defaultHTMLResponse } from './http-responses';
 
 addEventListener('fetch', event => {
   const request = event.request;
@@ -7,6 +8,8 @@ addEventListener('fetch', event => {
 
   const match = router.match(request.method, pathname);
   if (match) {
-      event.respondWith(match.handler(request, match.params));
+    event.respondWith(match.handler(request, match.params));
+  }else{
+    event.respondWith(defaultHTMLResponse());
   }
 })

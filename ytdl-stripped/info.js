@@ -1,7 +1,7 @@
-import { fget, playError, cutAfterJSON, between, stripHTML, addFormatMeta } from './utility';
+import { fget, playError, cutAfterJSON, between, stripHTML, addFormatMeta, YTDLError } from './utility';
 import { parse as qsParse } from 'querystring';
 import { decipherFormats } from './sig';
-import xmldoc from 'xmldoc';
+import { XmlDocument } from 'xmldoc';
 
 
 const VIDEO_URL = 'https://www.youtube.com/watch?v=';
@@ -15,10 +15,10 @@ const defaultOptions = {
   requestOptions: {
     method: 'GET',
     redirect: 'follow',
-    /*cf: {
+    cf: {
       cacheTtl: 180,
       cacheEverything: true,
-    },*/
+    },
 
   }
 }
@@ -50,7 +50,7 @@ export const getBasicInfo = async (id, infOptions) => {
     try {
       info = JSON.parse(body).reduce((part, curr) => Object.assign(curr, part), {});
     } catch (err) {
-      throw Error(`Error parsing info: ${err.message}`);
+      throw YTDLError(`Error parsing info: ${err.message}`);
     }
   
     let playErr = playError(info, 'ERROR');
@@ -62,16 +62,16 @@ export const getBasicInfo = async (id, infOptions) => {
       // If the video page doesn't work, maybe because it has mature content.
       // and requires an account logged in to view, try the embed page.
       let embedUrl = `${EMBED_URL + id}?${params}`;
-      [, body] = await fget(embedUrl, options.requestOptions);
+      body = await fget(embedUrl, options.requestOptions);
       let jsonStr = between(body, 't.setConfig({\'PLAYER_CONFIG\': ', '</script>');
       let config;
       if (!jsonStr) {
-        throw Error('Could not find player config');
+        throw YTDLError('Could not find player config');
       }
       try {
         config = JSON.parse(cutAfterJSON(jsonStr));
       } catch (err) {
-        throw Error(`Error parsing config: ${err.message}`);
+        throw YTDLError(`Error parsing config: ${err.message}`);
       }
       playErr = playError(info, 'LOGIN_REQUIRED');
       if (!config.args.player_response && !config.args.embedded_player_response && playErr) {
@@ -129,14 +129,14 @@ const gotConfig = async(id, options, info, body) => {
       info.playerResponse;
   
     if (moreinfo.status === 'fail') {
-      throw Error(`Code ${moreinfo.errorcode}: ${stripHTML(moreinfo.reason)}`);
+      throw YTDLError(`Code ${moreinfo.errorcode}: ${stripHTML(moreinfo.reason)}`);
     } else if (typeof player_response === 'object') {
       info.player_response = player_response;
     } else {
       try {
         info.player_response = JSON.parse(player_response);
       } catch (err) {
-        throw Error(`Error parsing \`player_response\`: ${err.message}`);
+        throw YTDLError(`Error parsing \`player_response\`: ${err.message}`);
       }
     }
   
@@ -223,7 +223,7 @@ export const getFullInfo = async(id, infOptions) => {
 const getDashManifest = async (url, options) => {
   let formats = {};
   let body = await fget(url, options.requestOptions);
-  let document = new xmldoc.XmlDocument(body);
+  let document = new XmlDocument(body);
   for(const repnode of document.childrenNamed('Representation')){
     const itag = parseInt(repnode.attr.ID);
     const baseurl = repnode.childNamed('BaseURL').val || url;

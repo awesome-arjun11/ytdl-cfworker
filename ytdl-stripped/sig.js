@@ -1,5 +1,5 @@
 import { parse } from 'querystring';
-import { fget } from './utility';
+import { fget, YTDLError } from './utility';
 
 export const cache = new Map();
 
@@ -20,7 +20,7 @@ export const getTokens = async (html5playerfile, options) => {
     let body = await fget(html5playerfile, options.requestOptions);
     const tokens = extractActions(body);
     if (!tokens || !tokens.length) {
-      throw Error('Could not extract signature deciphering actions');
+      throw YTDLError('Could not extract signature deciphering actions');
     }
     cache.set(html5playerfile, tokens);
     return tokens;

@@ -1,4 +1,4 @@
-import {FORMATS} from './formats';
+import { FORMATS } from './formats';
 
 export const fget = async (url, options, maxRetries = 2) => {
     const resp = await fetch_retry(url, options, maxRetries);
@@ -50,7 +50,7 @@ export const between = (haystack, left, right) => {
 export const playError = (info, status) => {
     let playability = info.playerResponse.playabilityStatus;
     if (playability && playability.status === status) {
-      return Error(playability.reason || (playability.messages && playability.messages[0]));
+      return YTDLError(playability.reason || (playability.messages && playability.messages[0]));
     }
     return null;
   };
@@ -73,7 +73,7 @@ export const cutAfterJSON = mixedJson => {
     }
   
     if (!open) {
-      throw new Error(`Can't cut unsupported JSON (need to begin with [ or { ) but got: ${mixedJson[0]}`);
+      throw new YTDLError(`Can't cut unsupported JSON (need to begin with [ or { ) but got: ${mixedJson[0]}`);
     }
   
     // States if the loop is currently in a string
@@ -105,7 +105,7 @@ export const cutAfterJSON = mixedJson => {
     }
   
     // We ran through the whole string and ended up with an unclosed bracket
-    throw Error("Can't cut unsupported JSON (no matching closing bracket found)");
+    throw YTDLError("Can't cut unsupported JSON (no matching closing bracket found)");
   }; 
 
 
@@ -143,3 +143,11 @@ export const addFormatMeta = format => {
   format.isDashMPD = /\/manifest\/dash\//.test(format.url);
   return format;
 };
+
+
+export class YTDLError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "YTDLError";
+  }
+}

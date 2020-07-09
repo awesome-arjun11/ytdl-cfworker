@@ -5,4 +5,4 @@
 
 
 export { getBasicInfo, getFullInfo } from './info';
-export { validateID } from './utility';
+export { validateID, YTDLError } from './utility';
