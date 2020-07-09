@@ -1,0 +1,18 @@
+{
+  "private": true,
+  "name": "frontend-ytdl-worker",
+  "version": "1.0.0",
+  "description": "ytdl for front end",
+  "main": "src\\index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Arjun Singh <awesome-arjun11@github.com>",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {
+    "tiny-request-router": "^1.2.2",
+    "xmldoc": "^1.1.2"
+  }
+}
