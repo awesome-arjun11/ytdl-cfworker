@@ -1,4 +1,4 @@
-name = "frontend-ytdl-worker"
+name = "ytdl-cfworker"
 type = "webpack"
 account_id = ""
 workers_dev = true
@@ -7,4 +7,4 @@ route = ""
 zone_id = ""
 
 [env.production]
-webpack_config = "webpack.prod.js"
+webpack_config = "webpack.prod.cjs"

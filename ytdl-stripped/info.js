@@ -16,7 +16,7 @@ const defaultOptions = {
     method: 'GET',
     redirect: 'follow',
     cf: {
-      cacheTtl: 180,
+      cacheTtl: 300,
       cacheEverything: true,
     },
 

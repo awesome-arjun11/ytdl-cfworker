@@ -12,7 +12,7 @@ const getytinfo = async (infofn, id) => {
         return theResponse(
             200,
             'OK',
-            {},
+            {'Cache-Control': 'max-age=300'},
             JSON.stringify(info)
         );
 
