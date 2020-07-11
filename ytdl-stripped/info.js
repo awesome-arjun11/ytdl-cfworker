@@ -1,4 +1,4 @@
-import { fget, playError, cutAfterJSON, between, stripHTML, addFormatMeta, YTDLError } from './utility';
+import { fget, playError, cutAfterJSON, between, stripHTML, addFormatMeta, YTDLError, sortFormats } from './utility';
 import { parse as qsParse } from 'querystring';
 import { decipherFormats } from './sig';
 import { XmlDocument } from 'xmldoc';
@@ -206,7 +206,7 @@ export const getFullInfo = async(id, infOptions) => {
     let results = await Promise.all(funcs);
     info.formats = Object.values(Object.assign({}, ...results));
     info.formats = info.formats.map(addFormatMeta);
-    //info.formats.sort(sortFormats);
+    info.formats.sort(sortFormats);
     info.full = true;
     return info;
   };

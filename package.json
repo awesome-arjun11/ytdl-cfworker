@@ -6,7 +6,10 @@
   "main": "src\\index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "devrun": "wrangler dev",
+    "build": "wrangler build --env production",
+    "publish": "wrangler publish --env production"
   },
   "author": "Arjun Singh <awesome-arjun11@github.com>",
   "license": "MIT",
