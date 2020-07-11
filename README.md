@@ -1,26 +1,29 @@
 # ytdl-cfworker
 
-Cloudflare ytdl worker to be used as Video Info API from frontend js. YTDL-CFWorker responses has CORS headers for it to be usable from front end.
+Cloudflare ytdl worker to be used as Video Info API from frontend js. YTDL-CFWorker responses has CORS headers for it to be usable from front end. Based on [ytdl-core](https://github.com/fent/node-ytdl-core).
 
 ----
 ## Deploying
 Install [wrangler](https://github.com/cloudflare/wrangler)
-> update wrangler.toml with your Cloudflare Account ID and run
+> update wrangler.toml with your Cloudflare Account ID and run 
 ```$ wrangler config```
 
+then
 ```console
+// install dependencies
 $ npm i
+// publish on cloudflare
 $ npm run publish
 ```
 
 ----
 ## Endpoints
 
-1.  _**/basicinfo/<youtube-video-id>**_
+1.  _**/basicinfo/\<youtube-video-id\>**_
 
     **Response:** JSON with video info and formats. Similar to _ytdl-core's_ `ytdl.getBasicInfo()`
 
-2.  _**/info/<youtube-video-id>**_
+2.  _**/info/\<youtube-video-id\>**_
 
     **Response:** JSON with video info and parsed formats (including Dash MPD & HLS m3u links). Similar to _ytdl-core's_ `ytdl.getInfo()`    
 
